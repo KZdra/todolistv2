@@ -1,5 +1,6 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
+import { defineAsyncComponent } from 'vue'
 import { delayImport } from '@/utils/delayImport';
 
 const router = createRouter({
@@ -8,13 +9,16 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: () => delayImport(() => import('@/views/HomeView.vue'), 3000) // 3-second delay
+      component: () => defineAsyncComponent(() =>
+        import('@/views/HomeView.vue')) 
     },
     {
       path: '/about',
       name: 'About',
-      component: () => delayImport(() => import('@/views/ListDoneView.vue'), 3000) // 3-second delay
+      component: () => defineAsyncComponent(() =>
+        import('@/views/ListDoneView.vue')) 
     },
+    
     // ... add other routes
   ]
 });

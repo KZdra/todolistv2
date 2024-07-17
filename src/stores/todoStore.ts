@@ -46,8 +46,16 @@ export const useTodoStore = defineStore('todo', {
     this.newTodo = ''; // Mengosongkan input setelah ditambahkan
   }
     },
-    deleteAllTodos() {
-      this.todos = [];
+    deleteAllUndoneTodos() {
+      // this.todos = [];
+      const doneIndexes = this.todos
+          .map((todo, index) => ({ todo, index }))
+          .filter(({ todo }) => !todo.done)
+          .map(({ index }) => index);
+             
+        for (let i = doneIndexes.length - 1; i >= 0; i--) {
+          this.todos.splice(doneIndexes[i], 1);
+        }
     },
 
     deleteAllDoneTodos() {
@@ -55,7 +63,7 @@ export const useTodoStore = defineStore('todo', {
           .map((todo, index) => ({ todo, index }))
           .filter(({ todo }) => todo.done)
           .map(({ index }) => index);
-  
+             
         for (let i = doneIndexes.length - 1; i >= 0; i--) {
           this.todos.splice(doneIndexes[i], 1);
         }

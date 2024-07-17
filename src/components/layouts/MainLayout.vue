@@ -2,6 +2,7 @@
   <div class="h-screen flex flex-col text-black">
     <header class="w-full bg-blue-600 p-4 flex justify-between items-center">
       <img :src="vueLogo" alt="Vue Logo" class="w-12 h-12">
+      <h2 class="text-white text-2xl font-bold">TO-DO LIST!</h2>
       <nav>
         <ul class="flex space-x-4">
           <li>
@@ -17,7 +18,7 @@
       <RouterView v-slot="{ Component }">
         <template v-if="Component">
           <Transition mode="out-in">
-            <Suspense :timeout="0">
+            <Suspense timeout="0">
               <template #default>
                 <!-- main content -->
                 <component :is="Component"></component>
