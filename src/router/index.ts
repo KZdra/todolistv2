@@ -1,7 +1,6 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
 import { defineAsyncComponent } from 'vue'
-import { delayImport } from '@/utils/delayImport';
 
 const router = createRouter({
   history: createWebHistory(),
