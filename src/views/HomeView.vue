@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useTodoStore } from '../stores/todoStore';
 import TodoCard from '../components/TodoCards.vue';
 import Swal from 'sweetalert2';
@@ -7,7 +6,10 @@ import { plusIcon, deleteIcon } from '../assets';
 
 
 const todoStore = useTodoStore();
-const newTodo = ref('');
+// const newTodo = ref('');
+
+console.log(todoStore);
+
 const addTodo = (event: Event) => {
   event.preventDefault();
   todoStore.addTodo();
