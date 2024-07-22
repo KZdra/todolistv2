@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { reactive, ref, toRefs } from 'vue';
 import Swal from 'sweetalert2';
 
 interface Todo {
@@ -6,66 +7,68 @@ interface Todo {
   done: boolean;
 }
 
-export const useTodoStore = defineStore('todo', {
-  state: () => ({
+export const useTodoStore = defineStore('todo', () => {
+  const state = reactive({
     name: '',
     todos: [] as Todo[],
-    newTodo: '',
-  }),
-  actions: {
-    addTodo() {
-         // Memeriksa apakah input hanya berisi spasi atau tidak ada teks
-  if (this.newTodo.trim() === '') {
-    Swal.fire({
-      title: "Empty Todo",
-      text: "Todo cannot be empty!",
-      icon: "error",
-      confirmButtonText: "OK"
-    });
-    return; // Menghentikan eksekusi lebih lanjut jika input kosong
-  }
+    newTodo: ''
+  });
 
-  // Memeriksa apakah todo sudah ada di dalam daftar
-  let duplicate = this.todos.find(todo => todo.title === this.newTodo.trim());
-
-  if (duplicate) {
-    if (duplicate.done) {
-      this.todos.push({ title: this.newTodo.trim(), done: false });
-      this.newTodo = ''; // Mengosongkan input setelah ditambahkan
-    } else {   
+  const addTodo = () => {
+    if (state.newTodo.trim() === '') {
       Swal.fire({
-        title: "Duplicate Todo",
-        text: "This todo already exists and is marked as done!",
-        icon: "warning",
+        title: "Empty Todo",
+        text: "Todo cannot be empty!",
+        icon: "error",
         confirmButtonText: "OK"
       });
+      return;
     }
-  } else {
-    // Jika tidak ada duplikat, tambahkan todo baru ke dalam array todos
-    this.todos.push({ title: this.newTodo.trim(), done: false });
-    this.newTodo = ''; // Mengosongkan input setelah ditambahkan
-  }
-    },
-    deleteAllTodos() {
-      this.todos = [];
-    },
 
-    deleteAllDoneTodos() {
-        const doneIndexes = this.todos
-          .map((todo, index) => ({ todo, index }))
-          .filter(({ todo }) => todo.done)
-          .map(({ index }) => index);
-  
-        for (let i = doneIndexes.length - 1; i >= 0; i--) {
-          this.todos.splice(doneIndexes[i], 1);
-        }
-    },  
-    markDone(index: number) {
-      this.todos[index].done = !this.todos[index].done;
-    },
-    deleteTodo(index: number) {
-      this.todos.splice(index, 1);
-    },
-  },
-  persist: true, // enable persist
+    let duplicate = state.todos.find(todo => todo.title === state.newTodo.trim());
+
+    if (duplicate) {
+      if (duplicate.done) {
+        state.todos.push({ title: state.newTodo.trim(), done: false });
+        state.newTodo = '';
+      } else {
+        Swal.fire({
+          title: "Duplicate Todo",
+          text: "This todo already exists and is marked as done!",
+          icon: "warning",
+          confirmButtonText: "OK"
+        });
+      }
+    } else {
+      state.todos.push({ title: state.newTodo.trim(), done: false });
+      state.newTodo = '';
+    }
+  };
+
+  const deleteAllUndoneTodos = () => {
+    state.todos = state.todos.filter(todo => todo.done);
+  };
+
+  const deleteAllDoneTodos = () => {
+    state.todos = state.todos.filter(todo => !todo.done);
+  };
+
+  const markDone = (index: number) => {
+    state.todos[index].done = !state.todos[index].done;
+  };
+
+  const deleteTodo = (index: number) => {
+    state.todos.splice(index, 1);
+  };
+
+  return {
+    ...toRefs(state),
+    addTodo,
+    deleteAllUndoneTodos,
+    deleteAllDoneTodos,
+    markDone,
+    deleteTodo
+  };
+}, {
+  persist: true,
 });

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useTodoStore } from '../stores/todoStore';
 import TodoCard from '../components/TodoCards.vue';
 import Swal from 'sweetalert2';
@@ -7,7 +6,9 @@ import { plusIcon, deleteIcon } from '../assets';
 
 
 const todoStore = useTodoStore();
-const newTodo = ref('');
+// const newTodo = ref('');
+
+
 const addTodo = (event: Event) => {
   event.preventDefault();
   todoStore.addTodo();
@@ -26,7 +27,7 @@ const deleteAllTodos = async () => {
 
   if (result.isConfirmed) {
     Swal.fire('Deleted!', 'Your Todo has been cleared!', 'success');
-    todoStore.deleteAllTodos();
+    todoStore.deleteAllUndoneTodos();
   }
 };
 </script>
@@ -68,7 +69,13 @@ const deleteAllTodos = async () => {
             >
               <img :src="plusIcon" alt=""> Add
             </button>
-
+            <button
+              type="button"
+              @click="deleteAllTodos"
+              class="ml-2 shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+            >
+              <img class="ml-3" :src="deleteIcon" alt=""> Delete All
+            </button>
           </div>
         </div>
       </form>
