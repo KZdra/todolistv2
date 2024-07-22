@@ -8,7 +8,6 @@ import { plusIcon, deleteIcon } from '../assets';
 const todoStore = useTodoStore();
 // const newTodo = ref('');
 
-console.log(todoStore);
 
 const addTodo = (event: Event) => {
   event.preventDefault();
